@@ -7,6 +7,7 @@
 ## Установка
    Склонируйте репозиторий:
    ```
+   git@github.com:JacobKleim/FastAPI_Tasks.git
    ```
 
 ## Виртуальное окружение      
