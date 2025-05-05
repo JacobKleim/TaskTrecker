@@ -1,17 +1,26 @@
+"""
+Тесты для эндпоинтов задач в FastAPI.
+
+Этот файл содержит тесты для проверки работы API задач, включая создание, получение, обновление и удаление задач.
+Используются асинхронные фикстуры для создания пользователей, аутентификации и взаимодействия с базой данных.
+
+Каждый тест проверяет:
+- Корректность кода ответа.
+- Ожидаемое поведение эндпоинтов при различных сценариях (успешный запрос, ошибка, неверные права доступа).
+"""
+
+import logging
+
 import pytest
-from conftest import (
-    USER_FALSE_EMAIL,
-    USER_FALSE_PASSWORD,
-    USER_FALSE_USERNAME,
-    USER_TRUE_EMAIL,
-    USER_TRUE_PASSWORD,
-    USER_TRUE_USERNAME,
-)
+from conftest import (USER_FALSE_EMAIL, USER_FALSE_PASSWORD, USER_FALSE_USERNAME, USER_TRUE_EMAIL, USER_TRUE_PASSWORD,
+                      USER_TRUE_USERNAME,)
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.db.models import Task
+from app.db.models import Task
 
+
+logger = logging.getLogger(__name__)
 
 TITLE = "test title"
 NEW_TITLE = "new test title"
@@ -21,7 +30,9 @@ IS_COMPLETED = False
 
 
 @pytest.mark.asyncio
-async def test_create_task(async_client: AsyncClient, db_session: AsyncSession, create_user, auth_header) -> None:
+async def test_create_task(
+    async_client: AsyncClient, db_session: AsyncSession, create_user, auth_header
+) -> None:
     """Тест создания новой задачи."""
 
     _ = await create_user(USER_TRUE_EMAIL, USER_TRUE_USERNAME, USER_TRUE_PASSWORD)
@@ -48,7 +59,9 @@ async def test_create_task(async_client: AsyncClient, db_session: AsyncSession, 
 @pytest.mark.asyncio
 async def test_get_task(async_client: AsyncClient, create_user, auth_header) -> None:
     """Тест получения задачи по ID."""
-    true_user = await create_user(USER_TRUE_EMAIL, USER_TRUE_USERNAME, USER_TRUE_PASSWORD)
+    true_user = await create_user(
+        USER_TRUE_EMAIL, USER_TRUE_USERNAME, USER_TRUE_PASSWORD
+    )
     true_header = await auth_header(USER_TRUE_EMAIL, USER_TRUE_PASSWORD)
 
     payload = {"title": TITLE, "description": DESCRIPTION}
@@ -65,7 +78,9 @@ async def test_get_task(async_client: AsyncClient, create_user, auth_header) -> 
 
 
 @pytest.mark.asyncio
-async def test_get_all_tasks(async_client: AsyncClient, create_user, auth_header) -> None:
+async def test_get_all_tasks(
+    async_client: AsyncClient, create_user, auth_header
+) -> None:
     """Тест получения всех задач."""
     _ = await create_user(USER_TRUE_EMAIL, USER_TRUE_USERNAME, USER_TRUE_PASSWORD)
     true_header = await auth_header(USER_TRUE_EMAIL, USER_TRUE_PASSWORD)
@@ -100,13 +115,17 @@ async def test_update_task(async_client: AsyncClient, create_user, auth_header) 
     assert check.status_code == 200
 
     new_payload = {"title": NEW_TITLE, "description": NEW_DESCRIPTION}
-    response = await async_client.put(f"/tasks/{task['id']}", json=new_payload, headers=true_header)
+    response = await async_client.put(
+        f"/tasks/{task['id']}", json=new_payload, headers=true_header
+    )
     assert response.status_code == 200
     updated = response.json()
     assert updated["title"] == NEW_TITLE
     assert updated["description"] == NEW_DESCRIPTION
 
-    response_with_false_header = await async_client.put(f"/tasks/{task['id']}", json=new_payload, headers=false_header)
+    response_with_false_header = await async_client.put(
+        f"/tasks/{task['id']}", json=new_payload, headers=false_header
+    )
     assert response_with_false_header.status_code == 403
 
 
@@ -124,7 +143,9 @@ async def test_delete_task(async_client: AsyncClient, create_user, auth_header) 
     assert response.status_code == 201
     task = response.json()
 
-    response_with_false_header = await async_client.delete(f"/tasks/{task['id']}", headers=false_header)
+    response_with_false_header = await async_client.delete(
+        f"/tasks/{task['id']}", headers=false_header
+    )
     assert response_with_false_header.status_code == 403
 
     response = await async_client.delete(f"/tasks/{task['id']}", headers=true_header)

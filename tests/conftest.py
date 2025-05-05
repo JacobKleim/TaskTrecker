@@ -1,4 +1,16 @@
+"""
+Фикстуры для тестирования API с использованием FastAPI и pytest.
+
+Этот файл содержит асинхронные фикстуры, которые помогают тестировать функциональность API,
+включая создание пользователей, аутентификацию, работу с базой данных и очистку данных.
+
+Эти фикстуры используются для выполнения тестов на создание, получение,
+обновление и удаление пользователей в API, а также для аутентификации пользователей
+и проверки взаимодействия с базой данных.
+"""
+
 import asyncio
+import logging
 
 import pytest_asyncio
 from fastapi_users.password import PasswordHelper
@@ -6,10 +18,12 @@ from httpx import ASGITransport, AsyncClient
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.db.database import get_async_session
-from app.api.db.models import User
+from app.db.database import get_async_session
+from app.db.models import User
 from app.main import app
 
+
+logger = logging.getLogger(__name__)
 
 USER_TRUE_EMAIL = "test@example.com"
 USER_TRUE_PASSWORD = "strongpassword123"
@@ -26,7 +40,7 @@ USER_FALSE_HASHED_PASSWORD = PasswordHelper().hash(USER_FALSE_PASSWORD)
 
 @pytest_asyncio.fixture(scope="session")
 def event_loop():
-    """Event loop на сессию pytest'а"""
+    """Event loop на сессию pytest'а."""
     loop = asyncio.new_event_loop()
     yield loop
     loop.close()
@@ -84,7 +98,7 @@ async def auth_header(
 
 @pytest_asyncio.fixture(autouse=True)
 async def clear_test_users(db_session: AsyncSession):
-    """Удаление тестовых пользователей перед и после тестов."""
+    """Удаление тестовых пользователей после тестов."""
     yield
 
     await db_session.rollback()

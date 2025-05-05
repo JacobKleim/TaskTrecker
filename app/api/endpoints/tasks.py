@@ -1,19 +1,25 @@
+"""
+Маршруты API для задач (tasks).
+
+Вызывают методы из слоя сервисов.
+"""
+
+import logging
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import select
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.core.auth_settings import fastapi_users
-from app.api.db.database import get_async_session
-from app.api.db.models import Task
-from app.api.schemas.task import TaskCreate, TaskRead, TaskUpdate
-from app.api.schemas.user import UserRead
+from app.core.auth_settings import fastapi_users
+from app.db.database import get_async_session
+from app.schemas.task import TaskCreate, TaskRead, TaskUpdate
+from app.schemas.user import UserRead
+from app.services.task_service import TaskService
 
+
+logger = logging.getLogger(__name__)
 
 get_current_user = fastapi_users.current_user()
-
-
 router = APIRouter()
 
 
@@ -23,77 +29,39 @@ async def create_task(
     db: AsyncSession = Depends(get_async_session),
     current_user: UserRead = Depends(get_current_user),
 ) -> TaskRead:
-    """Создание задачи."""
-    db_task = Task(title=task.title, description=task.description, user_id=current_user.id)
-    db.add(db_task)
-    await db.commit()
-    await db.refresh(db_task)
-    return db_task
+    return await TaskService.create_task(task, db, current_user)
 
 
 @router.get("/tasks/{task_id}", response_model=TaskRead)
 async def get_task(
     task_id: int,
-    session: AsyncSession = Depends(get_async_session),
+    db: AsyncSession = Depends(get_async_session),
     current_user: UserRead = Depends(get_current_user),
 ) -> TaskRead:
-    """Получение информации о задаче."""
-    result = await session.execute(select(Task).where(Task.id == task_id, Task.user_id == current_user.id))
-    task = result.scalar_one_or_none()
-    if task is None:
-        raise HTTPException(status_code=404, detail="Task not found")
-    return task
+    return await TaskService.get_task(task_id, db, current_user)
 
 
 @router.get("/tasks", response_model=List[TaskRead])
 async def get_all_tasks(
-    session: AsyncSession = Depends(get_async_session),
+    db: AsyncSession = Depends(get_async_session),
 ) -> List[TaskRead]:
-    """Получение всех задач у пользователя."""
-    result = await session.execute(select(Task))
-    tasks = result.scalars().all()
-    return tasks
+    return await TaskService.get_all_tasks(db)
 
 
 @router.put("/tasks/{task_id}", response_model=TaskRead)
 async def update_task(
     task_id: int,
     task_update: TaskUpdate,
-    session: AsyncSession = Depends(get_async_session),
+    db: AsyncSession = Depends(get_async_session),
     current_user: UserRead = Depends(get_current_user),
 ) -> TaskRead:
-    """Обновление информации о задаче."""
-    result = await session.execute(select(Task).where(Task.id == task_id))
-    task = result.scalar_one_or_none()
-    if task is None:
-        raise HTTPException(status_code=404, detail="Task not found")
-
-    if task.user_id != current_user.id:
-        raise HTTPException(status_code=403, detail="Not enough permissions")
-
-    task.title = task_update.title
-    task.description = task_update.description
-    task.completed = task_update.completed
-    await session.commit()
-    await session.refresh(task)
-    return task
+    return await TaskService.update_task(task_id, task_update, db, current_user)
 
 
 @router.delete("/tasks/{task_id}")
 async def delete_task(
     task_id: int,
-    session: AsyncSession = Depends(get_async_session),
+    db: AsyncSession = Depends(get_async_session),
     current_user: UserRead = Depends(get_current_user),
 ) -> None:
-    """Удаление задачи."""
-    result = await session.execute(select(Task).where(Task.id == task_id))
-    task = result.scalar_one_or_none()
-    if task is None:
-        raise HTTPException(status_code=404, detail="Task not found")
-
-    if task.user_id != current_user.id:
-        raise HTTPException(status_code=403, detail="Not enough permissions")
-
-    await session.delete(task)
-    await session.commit()
-    return task
+    return await TaskService.delete_task(task_id, db, current_user)
