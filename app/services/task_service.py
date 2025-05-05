@@ -14,11 +14,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models import Task
-from app.exceptions import (
-    ForbiddenTaskDeleteException,
-    ForbiddenTaskUpdateException,
-    TaskNotFoundException,
-)
+from app.exceptions import ForbiddenTaskDeleteException, ForbiddenTaskUpdateException, TaskNotFoundException
 from app.schemas.task import TaskCreate, TaskRead, TaskUpdate
 from app.schemas.user import UserRead
 

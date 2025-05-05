@@ -5,7 +5,12 @@
 предназначенные для централизованной обработки ошибок в сервисных слоях.
 """
 
+import logging
+
 from fastapi import HTTPException, status
+
+
+logger = logging.getLogger(__name__)
 
 
 class UserNotFoundException(HTTPException):
