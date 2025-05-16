@@ -23,7 +23,6 @@ from app.core.config import load_config
 from app.db.database import get_async_session
 from app.db.models import User
 
-
 logger = logging.getLogger(__name__)
 
 config = load_config()

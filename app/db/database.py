@@ -14,7 +14,6 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 
 from app.core.config import load_config
 
-
 logger = logging.getLogger(__name__)
 
 config = load_config()

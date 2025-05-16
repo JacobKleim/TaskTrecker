@@ -12,13 +12,18 @@
 import logging
 
 import pytest
-from conftest import (USER_FALSE_EMAIL, USER_FALSE_PASSWORD, USER_FALSE_USERNAME, USER_TRUE_EMAIL, USER_TRUE_PASSWORD,
-                      USER_TRUE_USERNAME,)
+from conftest import (
+    USER_FALSE_EMAIL,
+    USER_FALSE_PASSWORD,
+    USER_FALSE_USERNAME,
+    USER_TRUE_EMAIL,
+    USER_TRUE_PASSWORD,
+    USER_TRUE_USERNAME,
+)
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models import Task
-
 
 logger = logging.getLogger(__name__)
 

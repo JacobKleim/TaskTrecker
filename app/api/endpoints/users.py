@@ -17,7 +17,6 @@ from app.db.models import User
 from app.schemas.user import UserCreate, UserRead, UserUpdate
 from app.services.user_service import UserService
 
-
 logger = logging.getLogger(__name__)
 
 get_current_user = fastapi_users.current_user()

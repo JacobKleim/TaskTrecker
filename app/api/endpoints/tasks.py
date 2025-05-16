@@ -16,7 +16,6 @@ from app.schemas.task import TaskCreate, TaskRead, TaskUpdate
 from app.schemas.user import UserRead
 from app.services.task_service import TaskService
 
-
 logger = logging.getLogger(__name__)
 
 get_current_user = fastapi_users.current_user()

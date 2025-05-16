@@ -18,7 +18,6 @@ from app.exceptions import ForbiddenTaskDeleteException, ForbiddenTaskUpdateExce
 from app.schemas.task import TaskCreate, TaskRead, TaskUpdate
 from app.schemas.user import UserRead
 
-
 logger = logging.getLogger(__name__)
 
 

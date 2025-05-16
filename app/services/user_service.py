@@ -17,7 +17,6 @@ from app.db.models import User
 from app.exceptions import ForbiddenUserDeleteException, ForbiddenUserUpdateException, UserNotFoundException
 from app.schemas.user import UserRead, UserUpdate
 
-
 logger = logging.getLogger(__name__)
 
 

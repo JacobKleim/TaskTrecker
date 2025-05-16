@@ -67,11 +67,11 @@
 ## Запуск
    Запуск сервера разработки:
    ```
-   uvicorn app.main:app --reload
+   poetry run uvicorn app.main:app --reload
    ```
 
 ## Тестирование
    Для запуска тестов выполните:
    ```
-   pytest
+   poetry run pytest
    ```

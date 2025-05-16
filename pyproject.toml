@@ -1,0 +1,62 @@
+[tool.poetry]
+name = "fastapi-tasks"
+version = "0.1.0"
+description = ""
+authors = ["Яков"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+alembic = "1.15.2"
+asyncpg = "0.30.0"
+environs = "14.1.1"
+fastapi = "0.115.12"
+fastapi-users = "14.0.1"
+fastapi-users-db-sqlalchemy = "7.0.0"
+httpx = "0.27.0"
+psycopg2-binary = "2.9.10"
+pydantic = "2.11.3"
+sqlalchemy = "2.0.40"
+uvicorn = "0.34.1"
+
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "4.2.0"
+pytest-asyncio = "0.26.0"
+ruff = "^0.11.10"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.ruff]
+exclude = [
+    "__init__.py",
+    "venv",
+    "alembic",
+    "docker",
+    ".git",
+    "__pycache__",
+]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+ignore = ["E203", "E266", "E501"]
+select = ["E", "F", "W", "I"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+
+[tool.pytest.ini_options]
+addopts = "-v"
+testpaths = ["tests"]
+pythonpath = [".", "app"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+asyncio_mode = "auto"

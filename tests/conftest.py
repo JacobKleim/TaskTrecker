@@ -22,7 +22,6 @@ from app.db.database import get_async_session
 from app.db.models import User
 from app.main import app
 
-
 logger = logging.getLogger(__name__)
 
 USER_TRUE_EMAIL = "test@example.com"

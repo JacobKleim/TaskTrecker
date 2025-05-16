@@ -7,7 +7,6 @@ import logging
 from fastapi_users import schemas
 from pydantic import ConfigDict, EmailStr, Field
 
-
 logger = logging.getLogger(__name__)
 
 

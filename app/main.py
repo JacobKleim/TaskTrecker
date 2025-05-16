@@ -11,7 +11,6 @@ from app.api.endpoints import tasks, users
 from app.core.auth_settings import auth_backend, fastapi_users
 from app.core.logging_config import setup_logging
 
-
 setup_logging()
 
 app = FastAPI()
