@@ -13,8 +13,13 @@ from typing import List
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.celery_tasks.notifications import send_email_mock, send_webhook_mock
 from app.db.models import Task
-from app.exceptions import ForbiddenTaskDeleteException, ForbiddenTaskUpdateException, TaskNotFoundException
+from app.exceptions import (
+    ForbiddenTaskDeleteException,
+    ForbiddenTaskUpdateException,
+    TaskNotFoundException,
+)
 from app.schemas.task import TaskCreate, TaskRead, TaskUpdate
 from app.schemas.user import UserRead
 
@@ -49,6 +54,13 @@ class TaskService:
         db.add(task)
         await db.commit()
         await db.refresh(task)
+        send_email_mock.delay(to_email=user.email, subject=f"Task #{task.id} created")
+
+        # Запускаем мок-отправку webhook с данными задачи
+        send_webhook_mock.delay(
+            url="http://example.com/webhook",
+            payload={"task_id": task.id, "user_id": user.id},
+        )
         return task
 
     @staticmethod

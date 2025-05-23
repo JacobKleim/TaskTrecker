@@ -1,77 +1,107 @@
-# Tasks
+# 🚀 REST API на FastAPI Backend с Celery, Redis и PostgreSQL
 
 ## Описание проекта
-   Асинхронный REST API на FastAPI с использованием PostgreSQL, асинхронным SQLAlchemy, Alembic, Docker и поддержкой поддержкой автотестов.
+
+   Этот проект реализует полноценный REST API на FastAPI с поддержкой:
+
+   - Асинхронного API (FastAPI + async SQLAlchemy)
+   - Отправки email и webhook задач через Celery
+   - Redis как брокера и backend для Celery
+   - PostgreSQL как основную базу данных
+   - Alembic для миграций
+   - Poetry как менеджера зависимостей
+   - Полноценной Docker-инфраструктуры
 
 
 ## Установка
    Склонируйте репозиторий:
-   ```
+   ```bash
    git clone git@github.com:JacobKleim/FastAPI_Tasks.git
    ```
 
-## Виртуальное окружение      
-  Создайте и активируйте виртуальное окружение:
-   ```
-   python -m venv venv
-   ```
-   For Windows:
+## Poetry + Зависимости
+   Обновите pip:
    ```bash
-   source venv/Scripts/activate
+   pip install --upgrade pip
    ```
-   For Linux:
+   Установите Poetry (если не установлен):
    ```bash
-   source venv/bin/activate
+   pip install poetry
    ```
-
-
-## Зависимости
-  Обновите pip и установите зависимости:
-   ```
-   python -m pip install --upgrade pip
-   ```
-   ```
-   pip install -r requirements.txt
+   Установите зависимости проекта:
+   ```bash
+   poetry install
    ```
 
 ## Переменные окружения:
    В корневом каталоге создайте файл .env и добавьте в него ваши данные для БД и секретный ключ:
-   ```
+   ```bash
    DATABASE_URL=postgresql+asyncpg://fastapi_user:fastapi_password@localhost:5432/fastapi_db
    SYNC_DATABASE_URL=postgresql+psycopg2://fastapi_user:fastapi_password@localhost:5432/fastapi_db
+
    SECRET_KEY=mysecretkey
    DEBUG=True
    ACCESS_TOKEN_EXPIRE_SECONDS=3600
+
    POSTGRES_USER=fastapi_user
    POSTGRES_PASSWORD=fastapi_password
    POSTGRES_DB=fastapi_db
+
+   CELERY_BROKER_URL=redis://localhost:6379/0
+   CELERY_RESULT_BACKEND=redis://localhost:6379/0
    ```
 
 ## База данных
-   База данных на PostgreSQL работает в docker контейнере. Установите Docker и запустите контейнер:
-   ```
+   База данных на PostgreSQL и Redis работает в docker контейнере. Установите [Docker](https://www.docker.com/) и запустите контейнер:
+   ```bash
    docker compose up -d
    ```
 
 ## Миграции
    Примените существующие миграции Alembic:
-   ```
-   alembic upgrade head
+   ```bash
+   docker compose exec app poetry run alembic upgrade head
    ```
    Если необходимо создать новые миграции, то используйте команду:
-   ```
-   alembic revision --autogenerate -m "Information about migration"
+   ```bash
+   docker compose exec app poetry run alembic revision --autogenerate -m "Information about migration"
    ```
    После создания новой миграции снова используйте команду для применения миграций.
 
 ## Запуск
    Запуск сервера разработки:
-   ```
-   poetry run uvicorn app.main:app --reload
+   ```bash
+   docker compose exec app poetry run uvicorn app.main:app --reload
    ```
 
 ## Тестирование
    Для запуска тестов выполните:
+   ```bash
+   docker compose exec app poetry run pytest
    ```
-   poetry run pytest
+
+## Celery: асинхронные задачи
+   Проект использует Celery для асинхронной обработки задач.
+
+   Запуск воркера:
+   ```bash
+   poetry run celery -A app.celery_tasks.notifications worker --loglevel=info --pool=solo
    ```
+   - --pool=solo подходит для Windows или разработки.
+   - В Linux используйте --pool=prefork или --pool=threads
+   ### *Изменения необходимо вносить в docker-compose файл*
+   
+   Celery worker logs:
+   ```bash
+   docker compose logs -f worker
+   ```
+
+
+
+## Разделение задач по воркерам (опционально)
+   Если ты хочешь разделить задачи (например, email и webhook) на разные очереди:
+   ```bash
+   poetry run celery -A app.celery_tasks.notifications worker --loglevel=info --queues=email_queue
+   poetry run celery -A app.celery_tasks.notifications worker --loglevel=info --queues=webhook_queue
+   ```
+   ### *Изменения необходимо вносить в docker-compose файл*

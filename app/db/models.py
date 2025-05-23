@@ -21,7 +21,7 @@ class Base(DeclarativeBase):
     pass
 
 
-class User(Base, SQLAlchemyBaseUserTable):
+class User(SQLAlchemyBaseUserTable, Base):
     """
     Модель пользователя.
 

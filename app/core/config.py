@@ -28,6 +28,12 @@ class JWTConfig:
 
 
 @dataclass
+class CeleryConfig:
+    broker_url: str
+    result_backend: str
+
+
+@dataclass
 class DatabaseConfig:
     """
     Конфигурация базы данных.
@@ -53,6 +59,7 @@ class Config:
     db: DatabaseConfig
     jwt: JWTConfig
     debug: bool
+    celery: CeleryConfig
 
 
 def load_config(path: str = "./.env") -> Config:
@@ -77,4 +84,8 @@ def load_config(path: str = "./.env") -> Config:
             ),
         ),
         debug=env.bool("DEBUG", default=False),
+        celery=CeleryConfig(
+            broker_url=env("CELERY_BROKER_URL"),
+            result_backend=env("CELERY_RESULT_BACKEND"),
+        ),
     )
