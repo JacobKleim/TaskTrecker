@@ -6,7 +6,6 @@ pytest_cache/
 .idea
 .pytest_cache
 app.log
-monitoring/grafana/grafana.db
-monitoring/grafana/plugins/
+monitoring/grafana/
 *.log
 *.cache
