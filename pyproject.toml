@@ -3,6 +3,7 @@ name = "fastapi-tasks"
 version = "0.1.0"
 description = ""
 authors = ["Яков"]
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -19,6 +20,7 @@ sqlalchemy = "2.0.40"
 uvicorn = "0.34.1"
 celery = "^5.5.2"
 redis = "^6.1.0"
+prometheus-client = "^0.22.0"
 
 
 [tool.poetry.group.dev.dependencies]

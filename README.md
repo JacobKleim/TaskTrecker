@@ -52,9 +52,9 @@
    ```
 
 ## База данных
-   База данных на PostgreSQL и Redis работает в docker контейнере. Установите [Docker](https://www.docker.com/) и запустите контейнер:
+   База данных на PostgreSQL и Redis работает в docker контейнере. Установите [Docker](https://www.docker.com/), соберите и запустите контейнеры:
    ```bash
-   docker compose up -d
+   docker-compose up --build -d
    ```
 
 ## Миграции

@@ -12,10 +12,12 @@ services:
     depends_on:
       - db
       - redis
+      - prometheus
+      - grafana
     ports:
       - "8000:8000"
 
-  worker:
+  celery:
     build:
       context: .
       dockerfile: Dockerfile
@@ -28,6 +30,15 @@ services:
     depends_on:
       - redis
       - db
+
+  flower:
+    image: mher/flower
+    ports:
+      - "5555:5555"
+    env_file:
+      - .env
+    depends_on:
+      - redis
 
   db:
     image: postgres:16
@@ -45,6 +56,20 @@ services:
     container_name: redis
     ports:
       - "6379:6379"
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./monitoring/grafana:/var/lib/grafana
 
 volumes:
   postgres_data:
