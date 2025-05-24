@@ -92,21 +92,17 @@
    ```
    - --pool=solo подходит для Windows или разработки.
    - В Linux используйте --pool=prefork или --pool=threads
-   ### По умолчанию Celery уже запущен в контейнере. Используйте этот раздел если хотите изменить конфигурацию.
-   #### *Изменения необходимо вносить в docker-compose файл*
    
    Celery worker logs:
    ```bash
    docker compose logs -f worker
    ```
 
-
-
-## Разделение задач по воркерам (опционально)
+#### Разделение задач по воркерам (опционально)
    Если ты хочешь разделить задачи (например, email и webhook) на разные очереди:
    ```bash
    poetry run celery -A app.celery_tasks.notifications worker --loglevel=info --queues=email_queue
    poetry run celery -A app.celery_tasks.notifications worker --loglevel=info --queues=webhook_queue
    ```
-   ### По умолчанию Celery уже запущен в контейнере. Используйте этот раздел если хотите изменить конфигурацию.
-   #### *Изменения необходимо вносить в docker-compose файл*
+   #### По умолчанию Celery уже запущен в контейнере. Используйте этот раздел если хотите изменить конфигурацию.
+   ##### *Изменения необходимо вносить в docker-compose файл*
