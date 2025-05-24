@@ -1,4 +1,4 @@
-# 🚀 REST API на FastAPI Backend с Celery, Redis и PostgreSQL
+# 🚀 REST API на FastAPI с Celery, Redis и PostgreSQL
 
 ## Описание проекта
 
