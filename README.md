@@ -60,8 +60,8 @@
    EMAIL_PASSWORD=your_password
    ```
 
-## База данных
-   База данных на PostgreSQL и Redis работает в docker контейнере. Установите [Docker](https://www.docker.com/), соберите и запустите контейнеры:
+## Запуск
+   Проект полностью докерезирован. Установите [Docker](https://www.docker.com/), соберите и запустите контейнеры:
    ```bash
    docker-compose up --build -d
    ```
@@ -76,12 +76,6 @@
    docker compose exec app poetry run alembic revision --autogenerate -m "Information about migration"
    ```
    После создания новой миграции снова используйте команду для применения миграций.
-
-## Запуск
-   Запуск сервера разработки:
-   ```bash
-   docker compose exec app poetry run uvicorn app.main:app --reload
-   ```
 
 ## Тестирование
    Для запуска тестов выполните:
@@ -98,7 +92,8 @@
    ```
    - --pool=solo подходит для Windows или разработки.
    - В Linux используйте --pool=prefork или --pool=threads
-   ### *Изменения необходимо вносить в docker-compose файл*
+   ### По умолчанию Celery уже запущен в контейнере. Используйте этот раздел если хотите изменить конфигурацию.
+   #### *Изменения необходимо вносить в docker-compose файл*
    
    Celery worker logs:
    ```bash
@@ -113,4 +108,5 @@
    poetry run celery -A app.celery_tasks.notifications worker --loglevel=info --queues=email_queue
    poetry run celery -A app.celery_tasks.notifications worker --loglevel=info --queues=webhook_queue
    ```
-   ### *Изменения необходимо вносить в docker-compose файл*
+   ### По умолчанию Celery уже запущен в контейнере. Используйте этот раздел если хотите изменить конфигурацию.
+   #### *Изменения необходимо вносить в docker-compose файл*
