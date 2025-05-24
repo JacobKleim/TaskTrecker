@@ -85,6 +85,7 @@
 
 ## Celery: асинхронные задачи
    Проект использует Celery для асинхронной обработки задач.
+   
    Celery worker логи:
    ```bash
    docker compose logs -f worker
