@@ -32,9 +32,15 @@
    ```bash
    poetry install
    ```
+   Добавить новые зависимости(если необходимо):
+   ```bash
+   poetry add some_library
+   ```
+
 
 ## Переменные окружения:
-   В корневом каталоге создайте файл .env и добавьте в него ваши данные для БД и секретный ключ:
+   В корневом каталоге создайте файл .env и добавьте в него ваши данные для БД и секретный ключ.
+   Пример:
    ```bash
    DATABASE_URL=postgresql+asyncpg://fastapi_user:fastapi_password@localhost:5432/fastapi_db
    SYNC_DATABASE_URL=postgresql+psycopg2://fastapi_user:fastapi_password@localhost:5432/fastapi_db
@@ -48,7 +54,10 @@
    POSTGRES_DB=fastapi_db
 
    CELERY_BROKER_URL=redis://localhost:6379/0
-   CELERY_RESULT_BACKEND=redis://localhost:6379/0
+   CELERY_RESULT_BACKEND_URL=redis://localhost:6379/0
+
+   EMAIL=your_mail@google.com
+   EMAIL_PASSWORD=your_password
    ```
 
 ## База данных

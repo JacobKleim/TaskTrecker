@@ -6,20 +6,23 @@
 """
 
 from fastapi import FastAPI
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from app.api import tasks, users
 from app.core.auth_settings import auth_backend, fastapi_users
 from app.core.logging_config import setup_logging
-from app.monitoring.metrics import metrics_router, prometheus_middleware
 
 setup_logging()
 
 app = FastAPI()
 
+Instrumentator(
+    should_group_status_codes=True,
+    should_ignore_untemplated=True,
+    excluded_handlers=["/metrics", "/docs", "/openapi.json"],
+).instrument(app).expose(app)
 
-app.middleware("http")(prometheus_middleware)
 
-app.include_router(metrics_router)
 app.include_router(users.router, tags=["users"])
 app.include_router(tasks.router, tags=["tasks"])
 app.include_router(
