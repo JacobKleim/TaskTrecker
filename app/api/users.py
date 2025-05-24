@@ -11,6 +11,7 @@ from fastapi import APIRouter, Depends
 from fastapi_users.manager import BaseUserManager
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.celery_tasks.notifications import send_email
 from app.core.auth_settings import fastapi_users, get_user_manager
 from app.db.database import get_async_session
 from app.db.models import User
@@ -29,7 +30,9 @@ async def register(
     user_manager: BaseUserManager[User, int] = Depends(get_user_manager),
 ) -> UserRead:
     """Создание пользователя."""
-    return await user_manager.create(user)
+    user = await user_manager.create(user)
+    send_email.delay(to_email=user.email, subject="Регистрация", body='Ваша учетная запись успешно создана')
+    return user
 
 
 @router.get("/users/{user_id}", response_model=UserRead)

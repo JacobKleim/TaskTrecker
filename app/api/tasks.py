@@ -10,6 +10,7 @@ from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.celery_tasks.notifications import send_email
 from app.core.auth_settings import fastapi_users
 from app.db.database import get_async_session
 from app.schemas.task import TaskCreate, TaskRead, TaskUpdate
@@ -28,7 +29,10 @@ async def create_task(
     db: AsyncSession = Depends(get_async_session),
     current_user: UserRead = Depends(get_current_user),
 ) -> TaskRead:
-    return await TaskService.create_task(task, db, current_user)
+
+    task = await TaskService.create_task(task, db, current_user)
+    send_email.delay(to_email=current_user.email, subject="Новая задача", body=f'Ваша задача {task.title} успешно создана')
+    return task
 
 
 @router.get("/tasks/{task_id}", response_model=TaskRead)

@@ -7,7 +7,7 @@ config = load_config()
 celery_app = Celery(
     "app",
     broker=config.celery.broker_url,
-    backend=config.celery.result_backend,
+    backend=config.celery.result_backend_url,
 )
 
 celery_app.autodiscover_tasks(["app.celery_tasks"])

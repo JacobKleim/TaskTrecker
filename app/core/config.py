@@ -14,6 +14,19 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
+class EmailConfig:
+    """
+    Конфигурация для email рассылок.
+
+    Атрибуты:
+        email (str): Почта с которой ведется рассылка.
+        email_password (int): Пароль приложения.
+    """
+    email: str
+    email_password: str
+
+
+@dataclass
 class JWTConfig:
     """
     Конфигурация JWT.
@@ -29,8 +42,15 @@ class JWTConfig:
 
 @dataclass
 class CeleryConfig:
+    """
+    Конфигурация Celery.
+
+    Атрибуты:
+        broker_url (str): URL брокера сообщений.
+        result_backend_url (str): URL хранилища результатов.
+    """
     broker_url: str
-    result_backend: str
+    result_backend_url: str
 
 
 @dataclass
@@ -60,6 +80,7 @@ class Config:
     jwt: JWTConfig
     debug: bool
     celery: CeleryConfig
+    mailing: EmailConfig
 
 
 def load_config(path: str = "./.env") -> Config:
@@ -86,6 +107,10 @@ def load_config(path: str = "./.env") -> Config:
         debug=env.bool("DEBUG", default=False),
         celery=CeleryConfig(
             broker_url=env("CELERY_BROKER_URL"),
-            result_backend=env("CELERY_RESULT_BACKEND"),
+            result_backend_url=env("CELERY_RESULT_BACKEND_URL"),
         ),
+        mailing=EmailConfig(
+            email=env("EMAIL"),
+            email_password=env("EMAIL_PASSWORD"),
+        )
     )
