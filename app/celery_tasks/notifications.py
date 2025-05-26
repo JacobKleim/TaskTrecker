@@ -61,8 +61,3 @@ def send_email(self, to_email: str, subject: str, body: str):
     except Exception as e:
         logger.exception(f"❌ Unexpected error, retrying: {e}")
         raise self.retry(exc=e)
-
-
-@celery_app.task
-def send_webhook_mock(url: str, payload: dict):
-    print(f"🌐 Webhook sent to {url} with payload {payload}")

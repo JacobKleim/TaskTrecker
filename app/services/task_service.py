@@ -13,7 +13,6 @@ from typing import List
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.celery_tasks.notifications import send_webhook_mock
 from app.db.models import Task
 from app.exceptions import (
     ForbiddenTaskDeleteException,
@@ -54,10 +53,6 @@ class TaskService:
         db.add(task)
         await db.commit()
         await db.refresh(task)
-        send_webhook_mock.delay(
-            url="http://example.com/webhook",
-            payload={"task_id": task.id, "user_id": user.id},
-        )
         return task
 
     @staticmethod
