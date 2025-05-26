@@ -5,7 +5,7 @@
    Этот проект реализует полноценный REST API на FastAPI с поддержкой:
 
    - Асинхронного API (FastAPI + async SQLAlchemy)
-   - Отправки email и webhook задач через Celery
+   - Отправки email через Celery
    - Redis как брокера и backend для Celery
    - PostgreSQL как основную базу данных
    - Alembic для миграций
