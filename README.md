@@ -12,7 +12,6 @@
 - 🐳 **Docker**|
 - 📄 **Alembic**
 - 📦 **Poetry**
-- 📂 **.env**
 
 ## 🧩 Возможности
    ✅ Асинхронный REST API на базе FastAPI и async SQLAlchemy
