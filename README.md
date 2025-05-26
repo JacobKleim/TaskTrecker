@@ -1,4 +1,4 @@
-# 🚀 REST API на FastAPI с Celery, Redis и PostgreSQL
+# 🚀 TaskTrecker
 
 ## Описание проекта
 
