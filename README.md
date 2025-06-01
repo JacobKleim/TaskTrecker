@@ -75,8 +75,8 @@
    CELERY_BROKER_URL=redis://localhost:6379/0
    CELERY_RESULT_BACKEND_URL=redis://localhost:6379/0
 
-   EMAIL=your_mail@google.com
-   EMAIL_PASSWORD=your_password
+   EMAIL=your_mail@gmail.com
+   EMAIL_PASSWORD=your_app_password
    ```
 
 ## 🚀 Запуск
