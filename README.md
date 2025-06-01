@@ -9,7 +9,7 @@
 - 🔑 **fastapi-users**
 - 📬 **Celery**
 - 📦 **Redis**
-- 🐳 **Docker**|
+- 🐳 **Docker**
 - 📄 **Alembic**
 - 📦 **Poetry**
 
